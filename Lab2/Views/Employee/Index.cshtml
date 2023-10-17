@@ -1,0 +1,88 @@
+﻿@model List<Employee>
+
+<h2>Список співробітників</h2>
+<a asp-controller="Employee" asp-action="Create" class="btn btn-warning">Додати співробітника</a>
+
+<!-- Форма фільтрації за посадою -->
+<form asp-controller="Employee" asp-action="Index" method="get">
+    <div class="form-group">
+        <label for="positionId">Фільтр за посадою:</label>
+        <select id="positionId" name="positionId" asp-items="ViewBag.Positions" class="form-control">
+            <option value="">Усі посади</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Фільтрувати</button>
+    </div>
+</form>
+
+<script>
+    // Отримати елемент <select>
+    var select = document.getElementById("positionId");
+
+    // Зберегти значення <select> у localStorage при зміні
+    select.addEventListener("change", function () {
+        localStorage.setItem("selectedPosition", select.value);
+    });
+
+    // Встановити збережене значення при завантаженні сторінки
+    var savedPosition = localStorage.getItem("selectedPosition");
+    if (savedPosition) {
+        select.value = savedPosition;
+    }
+</script>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Код співробітника</th>
+            <th>ПІБ</th>
+            <th>Вік</th>
+            <th>Пол</th>
+            <th>Адреса</th>
+            <th>Телефон</th>
+            <th>Паспортні дані</th>
+            <th>Посада</th>
+            <th>Доступні дії</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var employee in Model)
+        {
+            <tr>
+                <td>@employee.EmployeeId</td>
+                <td>@employee.FullName</td>
+                <td>@employee.Age</td>
+                <td>@employee.Gender</td>
+                <td>@employee.Address</td>
+                <td>@employee.PhoneNumber</td>
+                <td>@employee.PassportData</td>
+                <td>@employee.Position.Title</td>
+                <td>
+                    <a asp-controller="Employee" asp-action="Edit" asp-route-id="@employee.EmployeeId" class="btn btn-success">Редагувати</a>
+                </td>
+                <td>
+                    <form asp-controller="Employee" asp-action="Delete" asp-route-id="@employee.EmployeeId" method="post" onsubmit="return confirm('Ви впевнені, що хочете видалити співробітника?');">
+                        <button type="submit" class="btn btn-danger">Видалити</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<div class="pagination">
+    
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            @for (int i = 1; i <= (int)ViewBag.TotalPages; i++)
+            {
+                <li class="page-item"><a class="page-link" href="@Url.Action("Index", new { page = i, pageSize = (int)ViewBag.PageSize })">@i</a></li>
+            }
+        </ul>
+    </nav>
+    
+    
+</div>
+

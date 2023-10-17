@@ -1,0 +1,27 @@
+﻿@model List<Position>
+
+<h2>Список посад</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Код посади</th>
+            <th>Найменування посади</th>
+            <th>Оклад</th>
+            <th>Обов'язки</th>
+            <th>Вимоги</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var position in Model)
+        {
+            <tr>
+                <td>@position.PositionId</td>
+                <td>@position.Title</td>
+                <td>@position.Salary</td>
+                <td>@position.Responsibilities</td>
+                <td>@position.Requirements</td>
+            </tr>
+        }
+    </tbody>
+</table>
